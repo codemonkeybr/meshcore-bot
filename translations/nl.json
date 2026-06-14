@@ -338,7 +338,8 @@
             "continuation_end": "\n...",
             "truncation": "...",
             "unknown_name": "Onbekend",
-            "repeater_resolution_deferred": "Pad: {path}\n\n💡 Tip: repeateridentificatie vereist paden met {minimum_path_bytes} byte(s) per hop."
+            "repeater_resolution_deferred": "Pad: {path}\n\n💡 Tip: repeateridentificatie vereist paden met {minimum_path_bytes} byte(s) per hop.",
+            "distance_traveled": "📏 {km} km afgelegd"
         },
         "prefix": {
             "description": "Zoek repeaters op twee-karakter prefix (bijv. 'prefix 1A')",

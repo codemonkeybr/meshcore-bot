@@ -335,7 +335,8 @@
             "continuation_end": "\n...",
             "truncation": "...",
             "unknown_name": "Desconhecido",
-            "repeater_resolution_deferred": "Caminho: {path}\n\n💡 Dica: a identificação de repetidores exige caminhos com {minimum_path_bytes} byte(s) por salto."
+            "repeater_resolution_deferred": "Caminho: {path}\n\n💡 Dica: a identificação de repetidores exige caminhos com {minimum_path_bytes} byte(s) por salto.",
+            "distance_traveled": "📏 {km} km percorridos"
         },
         "prefix": {
             "description": "Procurar repetidores por prefixo de dois caracteres (ex: 'prefixo 1A')",

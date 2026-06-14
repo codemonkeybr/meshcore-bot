@@ -885,6 +885,10 @@ require_path_bytes_greater_or_equal_to = 0
 # Optional response when rejected by path-byte requirement; leave empty for silent reject
 require_path_bytes_failure_response =
 
+# Append total distance traveled (sender → repeaters → bot) to path responses (default: true)
+# Silently omitted when any repeater in the path has no known coordinates.
+show_path_distance = true
+
 # Enable "p" shortcut for path command (similar to "t" for test command)
 # true: Respond to just "p" or "p <path_data>" as a shortcut for "path"  (default)
 # false: Only respond to "path", "decode", or "route" keywords

@@ -132,6 +132,10 @@ class PathCommand(BaseCommand):
         self.medium_confidence_symbol = bot.config.get('Path_Command', 'medium_confidence_symbol', fallback='📍')
         self.low_confidence_symbol = bot.config.get('Path_Command', 'low_confidence_symbol', fallback='❓')
 
+        self.show_path_distance = self.get_config_value(
+            'Path_Command', 'show_path_distance', fallback=True, value_type='bool'
+        )
+
         # Check if "p" shortcut is enabled (on by default)
         self.enable_p_shortcut = bot.config.getboolean('Path_Command', 'enable_p_shortcut', fallback=True)
         if self.enable_p_shortcut:
@@ -1709,6 +1713,11 @@ class PathCommand(BaseCommand):
 
             lines.append(line)
 
+        if self.show_path_distance:
+            km, missing = self._calculate_full_path_km(node_ids)
+            if km is not None and missing == 0:
+                lines.append(self.translate('commands.path.distance_traveled', km=km))
+
         # Return all lines - let _send_path_response handle the splitting
         return "\n".join(lines)
 
@@ -1818,6 +1827,39 @@ class PathCommand(BaseCommand):
 
         truncated: str = text_bytes[:available].decode('utf-8', errors='ignore')
         return truncated + ellipsis
+
+    def _calculate_full_path_km(self, node_ids: list[str]) -> tuple[Optional[float], int]:
+        """Sum distance sender → repeaters → bot. Returns (km, missing_count).
+
+        missing_count is the number of node_ids with no location in the DB.
+        km is None when fewer than 2 waypoints have known coordinates.
+        """
+        waypoints: list[tuple[float, float]] = []
+        missing = 0
+
+        sender_loc = self._get_sender_location()
+        if sender_loc:
+            waypoints.append(sender_loc)
+
+        for node_id in node_ids:
+            loc = self._get_node_location(node_id)
+            if loc:
+                waypoints.append(loc)
+            else:
+                missing += 1
+
+        if self.bot_latitude is not None and self.bot_longitude is not None:
+            waypoints.append((self.bot_latitude, self.bot_longitude))
+
+        if len(waypoints) < 2:
+            return None, missing
+
+        total = sum(
+            calculate_distance(waypoints[i][0], waypoints[i][1],
+                               waypoints[i + 1][0], waypoints[i + 1][1])
+            for i in range(len(waypoints) - 1)
+        )
+        return round(total, 1), missing
 
     def get_help(self) -> str:
         """Get help text for the path command"""

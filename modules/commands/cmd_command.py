@@ -87,7 +87,7 @@ class CmdCommand(BaseCommand):
         priority_commands = [
             'test', 'ping', 'help', 'hello', 'cmd', 'advert',
             'wx', 'aqi', 'sun', 'moon', 'solar', 'hfcond', 'satpass',
-            'prefix', 'path', 'sports', 'dice', 'roll', 'stats'
+            'prefix', 'path', 'leaderboard', 'sports', 'dice', 'roll', 'stats'
         ]
 
         # Get all command names (only those available in this context)

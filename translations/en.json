@@ -275,6 +275,13 @@
       "repeater_resolution_deferred": "Path: {path}\n\n💡 Tip: Repeater identification requires {minimum_path_bytes}-byte paths.",
       "distance_traveled": "📏 {km} km traveled"
     },
+    "leaderboard": {
+      "description": "Show the farthest path-command distances for this week and all time",
+      "weekly_best": "📏 {km} km — {name}",
+      "alltime_best": "👑 {km} km — {name}",
+      "no_weekly_records": "No records this week yet",
+      "no_records": "No records yet"
+    },
     "multitest": {
       "description": "Listens for 6 seconds and collects all unique paths from incoming messages with the same packet hash",
       "help": "Listens for 6 seconds and collects all unique paths from incoming messages with the same packet hash"

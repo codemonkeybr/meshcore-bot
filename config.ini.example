@@ -1100,6 +1100,12 @@ graph_capture_enabled = true
 star_bias_multiplier = 2.5
 
 
+[Leaderboard_Command]
+# Enable or disable the leaderboard command (true/false)
+enabled = true
+# keywords = leaderboard, lb
+
+
 [Joke_Command]
 # Enable or disable the joke command (true/false)
 enabled = true

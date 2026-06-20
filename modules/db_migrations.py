@@ -490,6 +490,27 @@ def _m0012_purging_log_details_column(cursor: sqlite3.Cursor) -> None:
         _add_column(cursor, "purging_log", "details", "TEXT")
 
 
+def _m0013_path_distance_records(cursor: sqlite3.Cursor) -> None:
+    """Create table for recording path-command distances (used by leaderboard)."""
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS path_distance_records (
+            id            INTEGER PRIMARY KEY AUTOINCREMENT,
+            recorded_at   INTEGER NOT NULL,
+            sender_pubkey TEXT,
+            sender_name   TEXT,
+            distance_km   REAL NOT NULL
+        )
+        """
+    )
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_pdr_recorded_at ON path_distance_records(recorded_at)"
+    )
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_pdr_distance ON path_distance_records(distance_km DESC)"
+    )
+
+
 # ---------------------------------------------------------------------------
 # Migration registry — append new entries here, never remove or reorder.
 # ---------------------------------------------------------------------------
@@ -509,6 +530,7 @@ MIGRATIONS: list[MigrationEntry] = [
     (10, "create repeater/graph tables", _m0010_create_repeater_and_graph_tables),
     (11, "repeater/graph indexes", _m0011_repeater_and_graph_indexes),
     (12, "purging_log: add details column", _m0012_purging_log_details_column),
+    (13, "path distance records table", _m0013_path_distance_records),
 ]
 
 

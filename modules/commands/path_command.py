@@ -1717,6 +1717,7 @@ class PathCommand(BaseCommand):
             km, missing = self._calculate_full_path_km(node_ids)
             if km is not None and missing == 0:
                 lines.append(self.translate('commands.path.distance_traveled', km=km))
+                self._save_path_distance(km)
 
         # Return all lines - let _send_path_response handle the splitting
         return "\n".join(lines)
@@ -1860,6 +1861,31 @@ class PathCommand(BaseCommand):
             for i in range(len(waypoints) - 1)
         )
         return round(total, 1), missing
+
+    def _save_path_distance(self, km: float) -> None:
+        """Persist a path distance record for the leaderboard."""
+        try:
+            msg = self._current_message if hasattr(self, '_current_message') else None
+            sender_pubkey = msg.sender_pubkey if msg else None
+            sender_name: Optional[str] = None
+
+            if sender_pubkey:
+                rows = self.bot.db_manager.execute_query(
+                    "SELECT name FROM complete_contact_tracking WHERE public_key = ? LIMIT 1",
+                    (sender_pubkey,),
+                )
+                if rows:
+                    sender_name = rows[0]['name']
+
+            if not sender_name and msg:
+                sender_name = msg.sender_id
+
+            self.bot.db_manager.execute_update(
+                "INSERT INTO path_distance_records (recorded_at, sender_pubkey, sender_name, distance_km) VALUES (?, ?, ?, ?)",
+                (int(time.time()), sender_pubkey, sender_name, km),
+            )
+        except Exception as e:
+            self.logger.debug(f"Error saving path distance record: {e}")
 
     def get_help(self) -> str:
         """Get help text for the path command"""

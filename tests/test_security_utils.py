@@ -147,6 +147,18 @@ class TestSanitizeInput:
         assert "\n" in result
         assert "\t" in result
 
+    def test_truncates_at_replacement_char(self):
+        result = sanitize_input("test�garbage`]")
+        assert result == "test"
+
+    def test_truncates_at_first_replacement_char(self):
+        result = sanitize_input("path��more")
+        assert result == "path"
+
+    def test_empty_after_replacement_char(self):
+        result = sanitize_input("�all garbage")
+        assert result == ""
+
 
 class TestValidateApiKeyFormat:
     """Tests for validate_api_key_format()."""

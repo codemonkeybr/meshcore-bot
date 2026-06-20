@@ -256,6 +256,11 @@ def sanitize_input(content: str, max_length: Optional[int] = 500, strip_controls
             content = content[:max_length]
             logger.debug(f"Input truncated to {max_length} characters")
 
+    # Truncate at first Unicode replacement character — signals a UTF-8 decode
+    # failure from radio corruption; everything at and after it is garbage.
+    if '�' in content:
+        content = content[:content.index('�')]
+
     # Remove control characters except newline, carriage return, tab
     if strip_controls:
         # Keep only printable characters plus common whitespace
